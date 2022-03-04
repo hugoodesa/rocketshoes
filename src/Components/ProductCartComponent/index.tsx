@@ -153,6 +153,7 @@ const QuantidadeNumericaStyled = styled(QuantidadeDescricaoStyled)`
 
 interface InterfaceProduto {
   produto: Produto;
+  key: number;
 }
 
 export const ProductCartComponent: React.FC<InterfaceProduto> = ({

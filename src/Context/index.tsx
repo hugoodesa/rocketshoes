@@ -18,21 +18,26 @@ export const CarrinhoProvider: React.FC<Props> = ({ children }) => {
   const [carrinho, setCarrinho] = useState<Produto[]>([]);
 
   const adicionarItemCarrinho = (produto: Produto) => {
-    const index = carrinho.indexOf(produto);
+    const [produtoAdicionar] = carrinho.filter((p) => p.id === produto.id);
+    const index = carrinho.indexOf(produtoAdicionar);
+
     let newStateCarrinho: Produto[] = [...carrinho];
 
     console.log("index " + index);
 
     if (index >= 0) {
+      console.log("Entrou");
       const produto: Produto = newStateCarrinho[index];
-      produto.quantidade++;
-      newStateCarrinho[index] = produto;
-      //newStateCarrinho[index].quantidade = produto.quantidade++;
+      newStateCarrinho[index] = {
+        ...produto,
+        quantidade: produto.quantidade + 1,
+      };
+      console.log(newStateCarrinho);
       setCarrinho(newStateCarrinho);
       return;
     }
 
-    newStateCarrinho = [...newStateCarrinho, produto];
+    newStateCarrinho = [...newStateCarrinho, { ...produto, quantidade: 1 }];
     setCarrinho(newStateCarrinho);
     console.log(newStateCarrinho);
     return;
