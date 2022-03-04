@@ -7,8 +7,8 @@ const ContainerProduct = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  width: 550px;
-  height: 200px;
+  width: 100%;
+  height: 230px;
   background-color: #fafbfc4e;
 
   margin: 5px;
@@ -89,11 +89,11 @@ const IncrementDecrementSubTotalComponent = styled.div`
 const TextComponent = styled.p`
   display: flex;
   flex-wrap: wrap;
-  color: #19191b;
+  color: #d4d4db;
   font-weight: 600;
   width: 100%;
   height: 2%;
-  font-size: 8px;
+  font-size: 12px;
   margin-left: 10px;
 `;
 
@@ -109,10 +109,10 @@ const CheckBox = (): JSX.Element => {
       }}
     >
       <input
-        className='form-check-input mt-0'
-        type='checkbox'
-        value=''
-        aria-label='Checkbox for following text input'
+        className="form-check-input mt-0"
+        type="checkbox"
+        value=""
+        aria-label="Checkbox for following text input"
         style={{
           width: "10px",
           height: "10px",
@@ -122,7 +122,7 @@ const CheckBox = (): JSX.Element => {
       />
       <label
         style={{
-          fontSize: "8px",
+          fontSize: "12px",
           color: "darkgray",
           display: "flex",
           alignItems: "center",
@@ -151,14 +151,22 @@ const QuantidadeNumericaStyled = styled(QuantidadeDescricaoStyled)`
   background-color: whitesmoke;
 `;
 
-export const ProductCartComponent: React.FC = () => {
+interface InterfaceProduto {
+  produto: Produto;
+}
+
+export const ProductCartComponent: React.FC<InterfaceProduto> = ({
+  produto,
+}) => {
   return (
     <>
       <ContainerProduct>
-        <ImageContainer />
+        <ImageContainer>
+          <img src={produto.image} alt={produto.title} />
+        </ImageContainer>
 
         <InfoContainer>
-          <TextComponent>Titulo</TextComponent>
+          <TextComponent>{produto.title}</TextComponent>
           <TextComponent>Ref: # NQQ-0144-257-41</TextComponent>
           <TextComponent>
             Vendido e entregue TextComponentor Netshoes
@@ -175,10 +183,14 @@ export const ProductCartComponent: React.FC = () => {
         <IncrementDecrementSubTotalComponent>
           <QuantidadeDescricaoStyled>Quantidade :</QuantidadeDescricaoStyled>
           <Button>-</Button>
-          <QuantidadeNumericaStyled>12</QuantidadeNumericaStyled>
+          <QuantidadeNumericaStyled>
+            {produto.quantidade}
+          </QuantidadeNumericaStyled>
           <Button>+</Button>
 
-          <QuantidadeDescricaoStyled>Total R$0,00</QuantidadeDescricaoStyled>
+          <QuantidadeDescricaoStyled>
+            Total R$ {produto.price}
+          </QuantidadeDescricaoStyled>
         </IncrementDecrementSubTotalComponent>
       </ContainerProduct>
     </>
