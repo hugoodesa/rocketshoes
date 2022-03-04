@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Card, Button } from "react-bootstrap";
 import styled from "styled-components";
+import { ContextCarrinho } from "../../Context";
+import { Produto } from "../../interfaces";
 import { ReactComponent as PlusCircle } from "../Icons/plusCircle.svg";
 
 const TitleStyled = styled.p`
@@ -29,23 +31,33 @@ const BodyCard = styled(Card.Body)`
   padding: 5px;
 `;
 
-export const ItemCard: React.FC = () => {
+const CardStyled = styled(Card)`
+  width: 10rem;
+  margin: 2px;
+
+  &:hover {
+    background-color: #f8f8f8fd;
+  }
+`;
+
+export const ItemCard = (produto: Produto, key: number) => {
+  const { adicionarItemCarrinho } = useContext(ContextCarrinho);
+
   return (
-    <Card style={{ width: "10rem", margin: "2px" }}>
-      <Card.Img
-        variant="top"
-        src="https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis2.jpg"
-      />
+    <CardStyled>
+      <Card.Img variant='top' src={produto.image} />
       <BodyCard>
-        <TitleStyled>
-          Tênis VR Caminhada Confortável Detalhes Couro Masculino
-        </TitleStyled>
-        <PriceStyled>R$ 139,99</PriceStyled>
+        <TitleStyled>{produto.title}</TitleStyled>
+        <PriceStyled>R$ {produto.price}</PriceStyled>
       </BodyCard>
-      <ButtonStyled>
+      <ButtonStyled
+        onClick={() => {
+          if (adicionarItemCarrinho) adicionarItemCarrinho(produto);
+        }}
+      >
         <PlusCircle />
         Adicionar ao Carrinho
       </ButtonStyled>
-    </Card>
+    </CardStyled>
   );
 };

@@ -14,4 +14,13 @@ export const GlobalStyled = createGlobalStyle`
         font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif ;
     }
 
+    .routerLink {
+        color :whitesmoke;
+        text-decoration: none;
+
+        :hover {
+          color :#725e7e;
+        }
+    }
+
 `;

@@ -1,6 +1,6 @@
-import React, { ReactNode } from "react";
-import { ButtonGroup, ToggleButton } from "react-bootstrap";
+import React from "react";
 import styled from "styled-components";
+import { Produto } from "../../interfaces";
 import { ReactComponent as TrashIcon } from "../Icons/trashIcon.svg";
 
 const ContainerProduct = styled.div`
@@ -41,14 +41,6 @@ const Button = styled.button`
   &:hover {
     background-color: #4099e2;
   }
-`;
-
-const QuantidadeComponent = styled.p`
-  display: flex;
-  padding: 10px;
-  border: solid 1px lightgrey;
-  border-radius: 5px;
-  height: 15px;
 `;
 
 const ImageContainer = styled.div`

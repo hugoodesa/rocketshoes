@@ -1,7 +1,6 @@
 import React from "react";
 import { ContainerStyled } from "../UI/index";
 import styled from "styled-components";
-import { Button } from "react-bootstrap";
 import { ProductCartComponent } from "../ProductCartComponent/index";
 
 const CartCardComponent = styled(ContainerStyled)`
