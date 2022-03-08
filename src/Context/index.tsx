@@ -1,29 +1,64 @@
-import React, { createContext, ReactNode, useState } from "react";
+import React, { createContext, ReactNode, useState, useEffect } from "react";
 import { Produto } from "../interfaces";
+import { getStock } from "../api/index";
+
+const PRODUTO_DEFAULT: Produto = {
+  id: 0,
+  image: "",
+  price: 0,
+  quantidade: 0,
+  title: "",
+};
+
+const CONTEXT_DEFAULT = {
+  adicionarItemCarrinho: (produto: Produto) => console.log("teste"),
+  subtrairItemCarrinho: (produto: Produto) => console.log("teste"),
+  excluirItemDoCarrinho: (produto: Produto) => console.log("teste"),
+  calcularTotalCarrinho: () => PRODUTO_DEFAULT,
+};
 
 interface CarrinhoInterface {
   carrinho?: Produto[];
   setCarrinho?: React.Dispatch<React.SetStateAction<Produto[]>>;
   adicionarItemCarrinho: (produto: Produto) => void;
-  removerItemCarrinho: (produto: Produto) => void;
+  subtrairItemCarrinho: (produto: Produto) => void;
+  excluirItemDoCarrinho: (produto: Produto) => void;
+  calcularTotalCarrinho: () => Produto;
 }
 
-export const ContextCarrinho = createContext<CarrinhoInterface>({
-  adicionarItemCarrinho: (produto: Produto) => console.log(produto),
-  removerItemCarrinho: (produto: Produto) => console.log(produto),
-});
+export const ContextCarrinho =
+  createContext<CarrinhoInterface>(CONTEXT_DEFAULT);
 
 interface Props {
   children: ReactNode;
 }
 
-export const CarrinhoProvider: React.FC<Props> = ({ children }) => {
+export const CarrinhoProvider: React.FC<Props> = ({
+  children,
+}): JSX.Element => {
   const [carrinho, setCarrinho] = useState<Produto[]>([]);
+  const [estoque, setEstoque] = useState({});
+
+  useEffect(() => {
+    const getProductsStock = async () => {
+      const response = await getStock();
+      const data = await response.data;
+      setEstoque(data);
+    };
+
+    getProductsStock();
+  }, []);
 
   const findIndexProduct = (produto: Produto): number => {
     const [produtoAdicionar] = carrinho.filter((p) => p.id === produto.id);
     const index = carrinho.indexOf(produtoAdicionar);
     return index;
+  };
+
+  const isProdutoTemEstoque = (): boolean => {
+    let isTemEstoque: boolean = true;
+
+    return isTemEstoque;
   };
 
   const adicionarItemCarrinho = (produto: Produto) => {
@@ -51,7 +86,7 @@ export const CarrinhoProvider: React.FC<Props> = ({ children }) => {
     return;
   };
 
-  const removerItemCarrinho = (produto: Produto) => {
+  const subtrairItemCarrinho = (produto: Produto) => {
     let newStateCarrinho = [...carrinho];
 
     if (produto.quantidade === 1) {
@@ -76,9 +111,40 @@ export const CarrinhoProvider: React.FC<Props> = ({ children }) => {
     }
   };
 
+  const excluirItemDoCarrinho = (produto: Produto) => {
+    const newStateCarrinho = [...carrinho].filter((p) => p.id !== produto.id);
+    setCarrinho(newStateCarrinho);
+  };
+
+  const calcularTotalCarrinho = (): Produto => {
+    const acc: Produto = {
+      id: 0,
+      image: "",
+      price: 0,
+      quantidade: 0,
+      title: "",
+    };
+
+    const carrinhoTotalizado = carrinho.reduce((accProduto, nextProduto) => {
+      accProduto.quantidade += nextProduto.quantidade;
+      accProduto.price += nextProduto.price * nextProduto.quantidade;
+      console.log(accProduto);
+      return accProduto;
+    }, acc);
+
+    console.log(carrinhoTotalizado);
+    return carrinhoTotalizado;
+  };
+
   return (
     <ContextCarrinho.Provider
-      value={{ carrinho, adicionarItemCarrinho, removerItemCarrinho }}
+      value={{
+        carrinho,
+        adicionarItemCarrinho,
+        excluirItemDoCarrinho,
+        subtrairItemCarrinho,
+        calcularTotalCarrinho,
+      }}
     >
       {children}
     </ContextCarrinho.Provider>

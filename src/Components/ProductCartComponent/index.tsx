@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { ContextCarrinho } from "../../Context";
 import { Produto } from "../../interfaces";
 import { ReactComponent as TrashIcon } from "../Icons/trashIcon.svg";
+import { ContextCarrinho } from "../../Context/index";
 
 const ContainerProduct = styled.div`
   display: flex;
@@ -47,7 +47,7 @@ const Button = styled.button`
 const ImageContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: fit-content;
+  width: 25%;
   height: 60%;
   background-color: white;
   border: 1px red;
@@ -70,7 +70,7 @@ const InfoContainer = styled.div`
 const TrashComponent = styled.div`
   align-items: center;
   flex-direction: column;
-  width: 8%;
+  width: 11%;
   height: 60%;
   /* background-color: white; */
   border: 1px red;
@@ -110,10 +110,10 @@ const CheckBox = (): JSX.Element => {
       }}
     >
       <input
-        className='form-check-input mt-0'
-        type='checkbox'
-        value=''
-        aria-label='Checkbox for following text input'
+        className="form-check-input mt-0"
+        type="checkbox"
+        value=""
+        aria-label="Checkbox for following text input"
         style={{
           width: "10px",
           height: "10px",
@@ -160,7 +160,7 @@ interface InterfaceProduto {
 export const ProductCartComponent: React.FC<InterfaceProduto> = ({
   produto,
 }) => {
-  const { adicionarItemCarrinho, removerItemCarrinho } =
+  const { adicionarItemCarrinho, excluirItemDoCarrinho, subtrairItemCarrinho } =
     useContext(ContextCarrinho);
 
   return (
@@ -182,12 +182,12 @@ export const ProductCartComponent: React.FC<InterfaceProduto> = ({
         </InfoContainer>
 
         <TrashComponent>
-          <TrashIcon />
+          <TrashIcon onClick={() => excluirItemDoCarrinho(produto)} />
         </TrashComponent>
 
         <IncrementDecrementSubTotalComponent>
           <QuantidadeDescricaoStyled>Quantidade :</QuantidadeDescricaoStyled>
-          <Button onClick={() => removerItemCarrinho(produto)}>-</Button>
+          <Button onClick={() => subtrairItemCarrinho(produto)}>-</Button>
           <QuantidadeNumericaStyled>
             {produto.quantidade}
           </QuantidadeNumericaStyled>

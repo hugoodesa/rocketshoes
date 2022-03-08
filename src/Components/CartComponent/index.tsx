@@ -18,7 +18,7 @@ export const CartComponent: React.FC = () => {
   const { carrinho } = useContext(ContextCarrinho);
 
   const ComponentCarrinhoVazio: React.FC = () => {
-    return <h4>carrinho se encontra vazio</h4>;
+    return <h4>Carrinho se encontra vazio</h4>;
   };
 
   return (
