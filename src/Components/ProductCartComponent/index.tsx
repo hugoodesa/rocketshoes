@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
+import { ContextCarrinho } from "../../Context";
 import { Produto } from "../../interfaces";
 import { ReactComponent as TrashIcon } from "../Icons/trashIcon.svg";
 
@@ -46,7 +47,7 @@ const Button = styled.button`
 const ImageContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 25%;
+  width: fit-content;
   height: 60%;
   background-color: white;
   border: 1px red;
@@ -69,7 +70,7 @@ const InfoContainer = styled.div`
 const TrashComponent = styled.div`
   align-items: center;
   flex-direction: column;
-  width: 11%;
+  width: 8%;
   height: 60%;
   /* background-color: white; */
   border: 1px red;
@@ -109,10 +110,10 @@ const CheckBox = (): JSX.Element => {
       }}
     >
       <input
-        className="form-check-input mt-0"
-        type="checkbox"
-        value=""
-        aria-label="Checkbox for following text input"
+        className='form-check-input mt-0'
+        type='checkbox'
+        value=''
+        aria-label='Checkbox for following text input'
         style={{
           width: "10px",
           height: "10px",
@@ -153,11 +154,15 @@ const QuantidadeNumericaStyled = styled(QuantidadeDescricaoStyled)`
 
 interface InterfaceProduto {
   produto: Produto;
+  key: number;
 }
 
 export const ProductCartComponent: React.FC<InterfaceProduto> = ({
   produto,
 }) => {
+  const { adicionarItemCarrinho, removerItemCarrinho } =
+    useContext(ContextCarrinho);
+
   return (
     <>
       <ContainerProduct>
@@ -182,11 +187,11 @@ export const ProductCartComponent: React.FC<InterfaceProduto> = ({
 
         <IncrementDecrementSubTotalComponent>
           <QuantidadeDescricaoStyled>Quantidade :</QuantidadeDescricaoStyled>
-          <Button>-</Button>
+          <Button onClick={() => removerItemCarrinho(produto)}>-</Button>
           <QuantidadeNumericaStyled>
             {produto.quantidade}
           </QuantidadeNumericaStyled>
-          <Button>+</Button>
+          <Button onClick={() => adicionarItemCarrinho(produto)}>+</Button>
 
           <QuantidadeDescricaoStyled>
             Total R$ {produto.price}

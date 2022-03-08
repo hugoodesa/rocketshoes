@@ -26,7 +26,7 @@ export const CartComponent: React.FC = () => {
       <CartCardComponent>
         {carrinho?.length ? (
           carrinho?.map((produto) => {
-            return <ProductCartComponent produto={produto} />;
+            return <ProductCartComponent key={produto.id} produto={produto} />;
           })
         ) : (
           <ComponentCarrinhoVazio />

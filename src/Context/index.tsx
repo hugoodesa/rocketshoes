@@ -4,11 +4,14 @@ import { Produto } from "../interfaces";
 interface CarrinhoInterface {
   carrinho?: Produto[];
   setCarrinho?: React.Dispatch<React.SetStateAction<Produto[]>>;
-  adicionarItemCarrinho?: (produto: Produto) => void;
-  removerItemCarrinho?: (produto: Produto) => void;
+  adicionarItemCarrinho: (produto: Produto) => void;
+  removerItemCarrinho: (produto: Produto) => void;
 }
 
-export const ContextCarrinho = createContext<CarrinhoInterface>({});
+export const ContextCarrinho = createContext<CarrinhoInterface>({
+  adicionarItemCarrinho: (produto: Produto) => console.log(produto),
+  removerItemCarrinho: (produto: Produto) => console.log(produto),
+});
 
 interface Props {
   children: ReactNode;
@@ -17,22 +20,32 @@ interface Props {
 export const CarrinhoProvider: React.FC<Props> = ({ children }) => {
   const [carrinho, setCarrinho] = useState<Produto[]>([]);
 
+  const findIndexProduct = (produto: Produto): number => {
+    const [produtoAdicionar] = carrinho.filter((p) => p.id === produto.id);
+    const index = carrinho.indexOf(produtoAdicionar);
+    return index;
+  };
+
   const adicionarItemCarrinho = (produto: Produto) => {
-    const index = carrinho.indexOf(produto);
+    const index = findIndexProduct(produto);
+
     let newStateCarrinho: Produto[] = [...carrinho];
 
-    console.log("index " + index);
+    console.log("index : " + index);
 
     if (index >= 0) {
+      console.log("Entrou");
       const produto: Produto = newStateCarrinho[index];
-      produto.quantidade++;
-      newStateCarrinho[index] = produto;
-      //newStateCarrinho[index].quantidade = produto.quantidade++;
+      newStateCarrinho[index] = {
+        ...produto,
+        quantidade: produto.quantidade + 1,
+      };
+      console.log(newStateCarrinho);
       setCarrinho(newStateCarrinho);
       return;
     }
 
-    newStateCarrinho = [...newStateCarrinho, produto];
+    newStateCarrinho = [...newStateCarrinho, { ...produto, quantidade: 1 }];
     setCarrinho(newStateCarrinho);
     console.log(newStateCarrinho);
     return;
@@ -41,9 +54,26 @@ export const CarrinhoProvider: React.FC<Props> = ({ children }) => {
   const removerItemCarrinho = (produto: Produto) => {
     let newStateCarrinho = [...carrinho];
 
-    newStateCarrinho = newStateCarrinho.filter((p) => p.id !== produto.id);
+    if (produto.quantidade === 1) {
+      newStateCarrinho = newStateCarrinho.filter((p) => p.id !== produto.id);
+      setCarrinho(newStateCarrinho);
+      return;
+    }
 
-    setCarrinho(newStateCarrinho);
+    if (produto.quantidade > 1) {
+      const index = findIndexProduct(produto);
+      newStateCarrinho = [...carrinho];
+      const produtoDecrementarQuantidade: Produto = newStateCarrinho[index];
+
+      newStateCarrinho[index] = {
+        ...produtoDecrementarQuantidade,
+        quantidade: produtoDecrementarQuantidade.quantidade - 1,
+      };
+      setCarrinho(newStateCarrinho);
+
+      //newStateCarrinho = newStateCarrinho.filter((p) => p.id !== produto.id);
+      return;
+    }
   };
 
   return (
