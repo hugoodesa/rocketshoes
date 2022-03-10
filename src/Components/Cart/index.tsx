@@ -1,10 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { ContextCarrinho } from "../../Context/index";
 import { CartComponent } from "../CartComponent/index";
 import { SubtotalComponent } from "../SubtotalComponent/index";
 import styled from "styled-components";
-
-import { Produto } from "../../interfaces/index";
 
 export const Cart: React.FC = () => {
   const { calcularTotalCarrinho } = useContext(ContextCarrinho);

@@ -5,3 +5,8 @@ export interface Produto {
   image: string;
   quantidade: number;
 }
+
+export interface Estoque {
+  id: number;
+  amount: number;
+}

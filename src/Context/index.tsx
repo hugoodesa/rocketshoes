@@ -1,6 +1,7 @@
 import React, { createContext, ReactNode, useState, useEffect } from "react";
 import { Produto } from "../interfaces";
 import { getStock } from "../api/index";
+import { Estoque } from "../interfaces/index";
 
 const PRODUTO_DEFAULT: Produto = {
   id: 0,
@@ -37,13 +38,12 @@ export const CarrinhoProvider: React.FC<Props> = ({
   children,
 }): JSX.Element => {
   const [carrinho, setCarrinho] = useState<Produto[]>([]);
-  const [estoque, setEstoque] = useState({});
+  const [estoque, setEstoque] = useState<Estoque[]>([]);
 
   useEffect(() => {
     const getProductsStock = async () => {
-      const response = await getStock();
-      const data = await response.data;
-      setEstoque(data);
+      const estoqueProdutos = await getStock();
+      setEstoque(estoqueProdutos);
     };
 
     getProductsStock();
@@ -55,8 +55,12 @@ export const CarrinhoProvider: React.FC<Props> = ({
     return index;
   };
 
-  const isProdutoTemEstoque = (): boolean => {
+  const isProdutoTemEstoque = (produto: Produto): boolean => {
     let isTemEstoque: boolean = true;
+
+    const [produtoEstoque] = estoque.filter((p) => p.id === produto.id);
+
+    isTemEstoque = produtoEstoque.amount >= produto.quantidade + 1;
 
     return isTemEstoque;
   };
@@ -66,11 +70,13 @@ export const CarrinhoProvider: React.FC<Props> = ({
 
     let newStateCarrinho: Produto[] = [...carrinho];
 
-    console.log("index : " + index);
-
     if (index >= 0) {
-      console.log("Entrou");
       const produto: Produto = newStateCarrinho[index];
+
+      if (!isProdutoTemEstoque(produto)) {
+        return alert("Produto se encontra sem estoque");
+      }
+
       newStateCarrinho[index] = {
         ...produto,
         quantidade: produto.quantidade + 1,
@@ -106,7 +112,6 @@ export const CarrinhoProvider: React.FC<Props> = ({
       };
       setCarrinho(newStateCarrinho);
 
-      //newStateCarrinho = newStateCarrinho.filter((p) => p.id !== produto.id);
       return;
     }
   };
